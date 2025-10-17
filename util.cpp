@@ -15,4 +15,3 @@ static void find_longest_path(adjacency_list& adj, bool_grid& dp) {
                     }
             }
 }
-
