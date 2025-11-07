@@ -32,7 +32,7 @@ vector<vector<int>> getSCCs(adjacency_list& adj, int_array& id, int_array& t, in
         int low = t[u] = ++tick;
         s.add(u);
         for(int v: adj[u])
-            if(id[v] == -1)
+            if(id[v] == -1 && contains(mask, v))
                 low = min(low, t[v] != 0 ? t[v] : self(v, self));
         if(low == t[u]) {
             int v;
