@@ -27,7 +27,7 @@ static void find_longest_path(adjacency_list& adj, bool_grid& dp) {
 //  `s` and `t` must be initialized to 0s
 vector<vector<int>> getSCCs(adjacency_list& adj, int_array& id, int_array& t, int_array& s, int mask) {
     int tick = 0, group_id = 0;
-    vector<vector<int>> SCC;
+    vector<vector<int>> scc;
     auto dfs = [&](int u, auto&& self) -> int {
         int low = t[u] = ++tick;
         s.add(u);
@@ -36,10 +36,10 @@ vector<vector<int>> getSCCs(adjacency_list& adj, int_array& id, int_array& t, in
                 low = min(low, t[v] != 0 ? t[v] : self(v, self));
         if(low == t[u]) {
             int v;
-            SCC.push_back(vector<int>());
+            scc.push_back(vector<int>());
             while(true) {
                 id[v = s.pop()] = group_id;
-                SCC[group_id].push_back(v);
+                scc[group_id].push_back(v);
                 if(v == u) break;
             }
             ++group_id;
@@ -49,5 +49,5 @@ vector<vector<int>> getSCCs(adjacency_list& adj, int_array& id, int_array& t, in
     for(int u = 0; u < N; ++u)
         if(t[u] == 0 && contains(mask, u))
             dfs(u, dfs);
-    return SCC;
+    return scc;
 }
