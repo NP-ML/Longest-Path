@@ -6,13 +6,13 @@ struct scc_features {
     int number_of_edges_inside_scc = 0;
     int number_of_edges_to_other_sccs = 0;
     int largest_path_sum;
+    int longest_dfs_path_to_exit;
 };
 
 struct vertex_features {
     int outdegree_inside_scc = 0;
     int outdegree_outside_scc = 0;
     int indegree_inside_scc = 0;
-    int longest_dfs_path_inside_scc;
     int longest_path_using_dfs_paths;
     int first_dfs_path_used;
     scc_features* scc_feats = NULL;
