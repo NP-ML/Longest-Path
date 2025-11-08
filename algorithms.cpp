@@ -51,3 +51,17 @@ vector<vector<int>> getSCCs(adjacency_list& adj, int_array& id, int_array& t, in
             dfs(u, dfs);
     return scc;
 }
+
+// Returns mask of all reachable vertices from `u` in the graph induced by `s`
+int reachable(adjacency_list& adj, int u, int s) {
+    int mask = 1 << u;
+    auto dfs = [&](int u_, auto&& self) -> void {
+        for(int v: adj[u_])
+            if(!contains(mask, v) && contains(s, v)) {
+                addto(mask, v);
+                self(v, self);
+            }
+    };
+    dfs(u, dfs);
+    return mask;
+}

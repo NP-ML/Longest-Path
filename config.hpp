@@ -7,11 +7,10 @@ constexpr unsigned int N = 25; // Graph size
 constexpr unsigned int POW2_N = 1 << N;
 
 using int_map = array<int, POW2_N>;
-using bool_array = bitset<N>;
-using bool_set = bitset<POW2_N>;
+using int_set = bitset<POW2_N>;
 using adjacency_list = array<vector<int>, N>;
-struct bool_grid : public vector<bool_set> { 
-    bool_grid() : vector<bool_set>(N) {} 
+struct bool_grid : public vector<int_set> { 
+    bool_grid() : vector<int_set>(N) {} 
 };
 // Array or stack of `N` integers
 struct int_array: public array<int, N> { 
@@ -23,3 +22,4 @@ struct int_array: public array<int, N> {
 };
 
 #define contains(mask, b) (((mask) >> (b)) & 1)
+#define addto(mask, b) ((mask) |= (1 << (b)))
