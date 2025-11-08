@@ -20,7 +20,7 @@ static void find_longest_path(adjacency_list& adj, bool_grid& dp) {
             }
 }
 
-// Fills the `id` array where `id[u]` is number of SCC containing `u` and returns `SCC` where `SCC[i]` is list of vertices in `i`th SCC
+// Fills the `id` array where `id[u]` is number of SCC containing `u` and returns `scc` where `scc[i]` is list of vertices in `i`th SCC
 //
 // Requirements:
 //  `id` must be initialized to -1s
