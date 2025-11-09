@@ -23,10 +23,10 @@ static void find_longest_path(list_of_lists& adj, bool_grid& dp) {
 // Fills the `id` array where `id[u]` is number of SCC containing `u` and returns `scc` where `scc[i]` is list of vertices in `i`th SCC
 //
 // Requirements:
-//  `scc[i]` is empty
+//  `scc` is empty
 //  `id` must be initialized to -1s
 //  `s` and `t` must be initialized to 0s
-void getSCCs(list_of_lists& scc, list_of_lists& adj, int_array& id, int_array& t, int_array& st, int s) {
+void getSCCs(vector<vector<int>>& scc, list_of_lists& adj, int_array& id, int_array& t, int_array& st, int s) {
     int tick = 0, group_id = 0;
     auto dfs = [&](int u, auto&& self) -> int {
         int low = t[u] = ++tick;
@@ -35,6 +35,7 @@ void getSCCs(list_of_lists& scc, list_of_lists& adj, int_array& id, int_array& t
             if(id[v] == -1 && contains(s, v))
                 low = min(low, t[v] != 0 ? t[v] : self(v, self));
         if(low == t[u]) {
+            scc.push_back(vector<int>());
             int v;
             while(true) {
                 id[v = st.pop()] = group_id;
@@ -54,7 +55,7 @@ void getSCCs(list_of_lists& scc, list_of_lists& adj, int_array& id, int_array& t
 //
 // Requirements:
 //  `reach` is filled with 0s
-void reachable(list_of_lists& scc, int_array& id, list_of_lists& adj2, int_array& reach) {
+void reachable(vector<vector<int>>& scc, int_array& id, list_of_lists& adj2, int_array& reach) {
     int k = scc.size();
     for(int i = 0; i < k; ++i) {
         for(int u: scc[i]) {
