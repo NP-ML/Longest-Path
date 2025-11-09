@@ -8,7 +8,7 @@ constexpr unsigned int POW2_N = 1 << N;
 
 using int_map = array<int, POW2_N>;
 using int_set = bitset<POW2_N>;
-using adjacency_list = array<vector<int>, N>;
+using list_of_lists = array<vector<int>, N>;
 struct bool_grid : public vector<int_set> { 
     bool_grid() : vector<int_set>(N) {} 
 };

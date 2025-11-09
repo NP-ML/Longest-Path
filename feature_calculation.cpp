@@ -18,8 +18,11 @@ struct vertex_features {
     scc_features* scc_feats = NULL;
 };
 
-// Returns `vector` of `scc_feature` structs for each SCC
-vector<scc_features> extract_scc_features(vector<vector<int>>& scc, int_array& id, adjacency_list& adj, int s) {
+// Fills `adj1` with edges in the same SCC and `adj2` with edges between different SCCs, and returns `vector` of `scc_feature` structs for each SCC
+//
+// Requirements:
+//  `adj1[u]` and `adj2[u]` must be empty
+vector<scc_features> extract_scc_features(list_of_lists& scc, int_array& id, list_of_lists& adj, list_of_lists& adj1, list_of_lists& adj2, int s) {
     int k = scc.size();
     vector<scc_features> scc_feats(k);
     for(int i = 0; i < k; ++i) {
@@ -31,9 +34,11 @@ vector<scc_features> extract_scc_features(vector<vector<int>>& scc, int_array& i
             for(int v: adj[u]) {
                 if(!contains(s, v)) continue;
                 if(id[u] == id[v]) {
+                    adj1[u].push_back(v);
                     ++this_scc_feats.number_of_edges_inside_scc;
                 }
                 else {
+                    adj2[u].push_back(v);
                     ++this_scc_feats.number_of_edges_to_other_sccs;
                     this_scc_feats.largest_path_sum = max(
                         this_scc_feats.largest_path_sum, 
@@ -47,6 +52,6 @@ vector<scc_features> extract_scc_features(vector<vector<int>>& scc, int_array& i
 }
 
 // Fills the `vertex_feats` array where `vertex_feats[u]` is the `vertex_features` struct for the vertex `u`
-void extract_vertex_features(int_array& id, adjacency_list& adj, array<vertex_features, N>& vertex_feats) {
+void extract_vertex_features(int_array& id, list_of_lists& adj, array<vertex_features, N>& vertex_feats) {
 
 }
