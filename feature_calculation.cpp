@@ -6,7 +6,7 @@ struct scc_features {
     int number_of_edges_inside_scc;
     int number_of_edges_to_other_sccs;
     int largest_path_sum;
-    int longest_dfs_path_to_exit;
+    int longest_dfs_path;
 };
 
 struct vertex_features {
@@ -28,7 +28,7 @@ void extract_scc_features(vector<vector<int>>& scc, int_array& id, list_of_lists
         scc_features& this_scc_feats = scc_feats[i];
         this_scc_feats.size = scc[i].size();
         this_scc_feats.largest_path_sum = this_scc_feats.size;
-        this_scc_feats.number_of_edges_inside_scc = this_scc_feats.number_of_edges_to_other_sccs = this_scc_feats.longest_dfs_path_to_exit = 0;
+        this_scc_feats.number_of_edges_inside_scc = this_scc_feats.number_of_edges_to_other_sccs = this_scc_feats.longest_dfs_path = 0;
         for(int u: scc[i]) {
             for(int v: adj[u]) {
                 if(!contains(s, v)) continue;
@@ -55,7 +55,7 @@ void extract_vertex_features(vector<vector<int>>& scc, int_array& id, list_of_li
     for(int i = 0; i < k; ++i) {
         list_of_lists revAdj;
         scc_features& this_scc_feats = scc_feats[i];
-        this_scc_feats.longest_dfs_path_to_exit = 1;
+        this_scc_feats.longest_dfs_path = 1;
         for(int u: scc[i]) {
             vertex_features& this_vertex_feats = vertex_feats[u];
             this_vertex_feats.outdegree_inside_scc = adj1[u].size();
@@ -68,12 +68,12 @@ void extract_vertex_features(vector<vector<int>>& scc, int_array& id, list_of_li
             vertex_feats[u].indegree_inside_scc = revAdj[u].size();
             if(this_scc_feats.number_of_edges_to_other_sccs && !adj2[u].size()) continue;
             int s = 0, remaining = 0;
-            for(int v: adj2[u]) remaining = max(remaining, vertex_feats[u].longest_path_using_dfs_paths);
+            for(int v: adj2[u]) remaining = max(remaining, vertex_feats[v].longest_path_using_dfs_paths);
             scc_features& this_scc_feats = scc_feats[i];
             auto dfs = [&](int u_, int len, auto&& self) -> void {
                 addto(s, u_);
                 vertex_features& this_vertex_feats = vertex_feats[u_];
-                this_scc_feats.longest_dfs_path_to_exit = max(this_scc_feats.longest_dfs_path_to_exit, len);
+                this_scc_feats.longest_dfs_path = max(this_scc_feats.longest_dfs_path, len);
                 if(len + remaining > this_vertex_feats.longest_path_using_dfs_paths || (len + remaining == this_vertex_feats.longest_path_using_dfs_paths && len == this_vertex_feats.first_dfs_path_used)) {
                     this_vertex_feats.longest_path_using_dfs_paths = len + remaining;
                     this_vertex_feats.first_dfs_path_used = len;
