@@ -82,7 +82,7 @@ void extract_vertex_features(vector<vector<int>>& scc, int_array& id, list_of_li
                     if(!contains(s, v))
                         self(v, len + 1, self);
             };
-            dfs(0, 1, dfs);
+            dfs(u, 1, dfs);
         }
     }
 }
