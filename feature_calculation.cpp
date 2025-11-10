@@ -122,7 +122,6 @@ struct graph_processor {
             get_sccs(scc, adj, id, t, st, s);
             extract_scc_features(scc, id, adj, adj1, adj2, scc_feats, s);
             int_array& reach = t;
-            reach.fill(0);
             get_reachability(scc, id, adj2, reach);
             extract_vertex_features(scc, id, adj1, adj2, scc_feats, vertex_feats);
             int k = scc.size();
@@ -131,7 +130,6 @@ struct graph_processor {
                     for(int u: scc[i])
                         process_example(vertex_feats[u]);
             // Resetting data structures
-            st.fill(0);
             t.fill(0);
             scc.clear();
             for(int i = 0; i < N; ++i) {

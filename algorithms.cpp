@@ -28,7 +28,7 @@ static void find_longest_path(
 // Requirements:
 //  `scc` is empty
 //  `id` must be initialized to -1s
-//  `st` and `t` must be initialized to 0s
+//  `t` must be initialized to 0s
 void get_sccs(
     vector<vector<int>>& scc, 
     list_of_lists& adj, 
@@ -62,9 +62,6 @@ void get_sccs(
 }
 
 // Fill the `reach` array where `reach[i]` is mask of all reachable vertices from SCC `i`
-//
-// Requirements:
-//  `reach` is filled with 0s
 void get_reachability(
     vector<vector<int>>& scc, 
     int_array& id, 
@@ -73,6 +70,7 @@ void get_reachability(
 ) {
     int k = scc.size();
     for(int i = 0; i < k; ++i) {
+        reach[i] = 0;
         for(int u: scc[i]) {
             addto(reach[i], u);
             for(int v: adj2[u]) reach[i] |= reach[id[v]];
