@@ -5,7 +5,10 @@ using namespace std;
 //
 // Requirements: 
 //  `dp` must be initialized to 0s
-static void find_longest_path(list_of_lists& adj, bool_grid& dp) {
+static void find_longest_path(
+    list_of_lists& adj, 
+    bool_grid& dp
+) {
     int temp, u;
     for(u = 0; u < N; ++u) dp[u][1 << u] = true;
     for(int mask = 1; mask < POW2_N; ++mask)
@@ -26,7 +29,14 @@ static void find_longest_path(list_of_lists& adj, bool_grid& dp) {
 //  `scc` is empty
 //  `id` must be initialized to -1s
 //  `s` and `t` must be initialized to 0s
-void getSCCs(vector<vector<int>>& scc, list_of_lists& adj, int_array& id, int_array& t, int_array& st, int s) {
+void get_sccs(
+    vector<vector<int>>& scc, 
+    list_of_lists& adj, 
+    int_array& id, 
+    int_array& t, 
+    int_array& st, 
+    int s
+) {
     int tick = 0, group_id = 0;
     auto dfs = [&](int u, auto&& self) -> int {
         int low = t[u] = ++tick;
@@ -55,7 +65,12 @@ void getSCCs(vector<vector<int>>& scc, list_of_lists& adj, int_array& id, int_ar
 //
 // Requirements:
 //  `reach` is filled with 0s
-void reachable(vector<vector<int>>& scc, int_array& id, list_of_lists& adj2, int_array& reach) {
+void get_reachability(
+    vector<vector<int>>& scc, 
+    int_array& id, 
+    list_of_lists& adj2, 
+    int_array& reach
+) {
     int k = scc.size();
     for(int i = 0; i < k; ++i) {
         for(int u: scc[i]) {

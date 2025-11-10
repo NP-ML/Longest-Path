@@ -1,6 +1,4 @@
-#include <bitset>
-#include <array>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
 constexpr unsigned int N = 25; // Graph size

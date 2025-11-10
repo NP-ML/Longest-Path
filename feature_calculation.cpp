@@ -1,4 +1,5 @@
 #include "config.hpp"
+#include "algorithms.cpp"
 using namespace std;
 
 struct scc_features {
@@ -22,7 +23,15 @@ struct vertex_features {
 //
 // Requirements:
 //  `adj1[u]` and `adj2[u]` must be empty
-void extract_scc_features(vector<vector<int>>& scc, int_array& id, list_of_lists& adj, list_of_lists& adj1, list_of_lists& adj2, array<scc_features, N>& scc_feats, int s) {
+void extract_scc_features(
+    vector<vector<int>>& scc, 
+    int_array& id, 
+    list_of_lists& adj, 
+    list_of_lists& adj1, 
+    list_of_lists& adj2, 
+    array<scc_features, N>& scc_feats, 
+    int s
+) {
     int k = scc.size();
     for(int i = 0; i < k; ++i) {
         scc_features& this_scc_feats = scc_feats[i];
@@ -50,7 +59,14 @@ void extract_scc_features(vector<vector<int>>& scc, int_array& id, list_of_lists
 }
 
 // Fills the `vertex_feats` array where `vertex_feats[u]` is the `vertex_features` struct for the vertex `u`
-void extract_vertex_features(vector<vector<int>>& scc, int_array& id, list_of_lists& adj1, list_of_lists& adj2, array<scc_features, N>& scc_feats, array<vertex_features, N>& vertex_feats) {
+void extract_vertex_features(
+    vector<vector<int>>& scc, 
+    int_array& id, 
+    list_of_lists& adj1, 
+    list_of_lists& adj2, 
+    array<scc_features, N>& scc_feats, 
+    array<vertex_features, N>& vertex_feats
+) {
     int k = scc.size();
     for(int i = 0; i < k; ++i) {
         list_of_lists revAdj;
@@ -74,7 +90,7 @@ void extract_vertex_features(vector<vector<int>>& scc, int_array& id, list_of_li
                 addto(s, u_);
                 vertex_features& this_vertex_feats = vertex_feats[u_];
                 this_scc_feats.longest_dfs_path = max(this_scc_feats.longest_dfs_path, len);
-                if(len + remaining > this_vertex_feats.longest_path_using_dfs_paths || (len + remaining == this_vertex_feats.longest_path_using_dfs_paths && len == this_vertex_feats.first_dfs_path_used)) {
+                if(len + remaining > this_vertex_feats.longest_path_using_dfs_paths || (len + remaining == this_vertex_feats.longest_path_using_dfs_paths && len < this_vertex_feats.first_dfs_path_used)) {
                     this_vertex_feats.longest_path_using_dfs_paths = len + remaining;
                     this_vertex_feats.first_dfs_path_used = len;
                 }
@@ -86,3 +102,31 @@ void extract_vertex_features(vector<vector<int>>& scc, int_array& id, list_of_li
         }
     }
 }
+
+struct graph_processor {
+    bool_grid dp;
+    list_of_lists adj1, adj2;
+    vector<vector<int>> scc;
+    int_array a, b, c;
+    array<scc_features, N> scc_feats;
+    array<vertex_features, N> vertex_feats;
+    // Takes an adjacency list and a function for processing an example
+    void process_graph(list_of_lists& adj, void (*process_example)(vertex_features)) {
+        find_longest_path(adj, dp);
+        for(int s = 1; s < POW2_N; ++s) { // considering G[s]
+            int_array& id = a, t = b, st = c; 
+            id.fill(-1);
+            get_sccs(scc, adj, id, t, st, s);
+            extract_scc_features(scc, id, adj, adj1, adj2, scc_feats, s);
+            int_array& reach = t;
+            reach.fill(0);
+            get_reachability(scc, id, adj2, reach);
+            extract_vertex_features(scc, id, adj1, adj2, scc_feats, vertex_feats);
+            int k = scc.size();
+            for(int i = 0; i < k; ++i)
+                if(reach[i] == s)
+                    for(int u: scc[i])
+                        process_example(vertex_feats[u]);
+        }
+    }
+};
