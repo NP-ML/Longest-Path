@@ -111,7 +111,10 @@ struct graph_processor {
     array<scc_features, N> scc_feats;
     array<vertex_features, N> vertex_feats;
     // Takes an adjacency list and a function for processing an example
-    void process_graph(list_of_lists& adj, void (*process_example)(vertex_features)) {
+    void process_graph(
+        list_of_lists& adj,
+        void (*process_example)(vertex_features&)
+    ) {
         find_longest_path(adj, dp);
         for(int s = 1; s < POW2_N; ++s) { // considering G[s]
             int_array& id = a, t = b, st = c; 
@@ -127,6 +130,15 @@ struct graph_processor {
                 if(reach[i] == s)
                     for(int u: scc[i])
                         process_example(vertex_feats[u]);
+            // Resetting data structures
+            st.fill(0);
+            t.fill(0);
+            scc.clear();
+            for(int i = 0; i < N; ++i) {
+                adj1[i].clear();
+                adj2[i].clear();
+            }
         }
+        for(int i = 0; i < N; ++i) dp[i].reset();
     }
 };

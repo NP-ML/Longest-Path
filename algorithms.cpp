@@ -28,7 +28,7 @@ static void find_longest_path(
 // Requirements:
 //  `scc` is empty
 //  `id` must be initialized to -1s
-//  `s` and `t` must be initialized to 0s
+//  `st` and `t` must be initialized to 0s
 void get_sccs(
     vector<vector<int>>& scc, 
     list_of_lists& adj, 
