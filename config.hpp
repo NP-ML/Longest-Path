@@ -20,4 +20,4 @@ struct int_array: public array<int, N> {
 };
 
 #define contains(mask, b) (((mask) >> (b)) & 1)
-#define addto(mask, b) ((mask) |= (1 << (b)))
+#define toggle(mask, b) ((mask) ^= (1 << (b)))

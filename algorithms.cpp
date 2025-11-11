@@ -5,7 +5,7 @@ using namespace std;
 //
 // Requirements: 
 //  `dp` must be initialized to 0s
-static void find_longest_path(
+static void fill_dp_grid(
     list_of_lists& adj, 
     bool_grid& dp
 ) {
@@ -15,7 +15,7 @@ static void find_longest_path(
         for(u = 0; u < N; ++u)
             if(contains(mask, u) && (mask & (mask - 1))) {
                 temp = mask ^ (1 << u);
-                for(int& v: adj[u])
+                for(int v: adj[u])
                     if(dp[v][temp]) {
                         dp[u][mask] = true;
                         break;
@@ -61,19 +61,18 @@ void get_sccs(
             dfs(u, dfs);
 }
 
-// Fill the `reach` array where `reach[i]` is mask of all reachable vertices from SCC `i`
-void get_reachability(
-    vector<vector<int>>& scc, 
-    int_array& id, 
-    list_of_lists& adj2, 
-    int_array& reach
+// Returns whether or not `u` reaches all of `s` in `G[s]`
+bool reaches_all(
+    int u,
+    list_of_lists& adj,
+    int s
 ) {
-    int k = scc.size();
-    for(int i = 0; i < k; ++i) {
-        reach[i] = 0;
-        for(int u: scc[i]) {
-            addto(reach[i], u);
-            for(int v: adj2[u]) reach[i] |= reach[id[v]];
-        }
-    }
+    auto dfs = [&](int u_, auto&& self) -> void {
+        toggle(s, u_);
+        for(int v: adj[u_])
+            if(contains(s, v))
+                self(v, self);
+    };
+    dfs(u, dfs);
+    return s == 0;
 }

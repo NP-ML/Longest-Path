@@ -11,6 +11,7 @@ struct scc_features {
 };
 
 struct vertex_features {
+    int longest_path;
     int outdegree_inside_scc;
     int outdegree_outside_scc;
     int indegree_inside_scc;
@@ -85,9 +86,8 @@ void extract_vertex_features(
             if(this_scc_feats.number_of_edges_to_other_sccs && !adj2[u].size()) continue;
             int s = 0, remaining = 0;
             for(int v: adj2[u]) remaining = max(remaining, vertex_feats[v].longest_path_using_dfs_paths);
-            scc_features& this_scc_feats = scc_feats[i];
             auto dfs = [&](int u_, int len, auto&& self) -> void {
-                addto(s, u_);
+                toggle(s, u_);
                 vertex_features& this_vertex_feats = vertex_feats[u_];
                 this_scc_feats.longest_dfs_path = max(this_scc_feats.longest_dfs_path, len);
                 if(len + remaining > this_vertex_feats.longest_path_using_dfs_paths || (len + remaining == this_vertex_feats.longest_path_using_dfs_paths && len < this_vertex_feats.first_dfs_path_used)) {
@@ -105,9 +105,10 @@ void extract_vertex_features(
 
 struct graph_processor {
     bool_grid dp;
+    int_map lp;
     list_of_lists adj1, adj2;
     vector<vector<int>> scc;
-    int_array a, b, c;
+    int_array id, t, st;
     array<scc_features, N> scc_feats;
     array<vertex_features, N> vertex_feats;
     // Takes an adjacency list and a function for processing an example
@@ -115,26 +116,30 @@ struct graph_processor {
         list_of_lists& adj,
         void (*process_example)(vertex_features&)
     ) {
-        find_longest_path(adj, dp);
-        for(int s = 1; s < POW2_N; ++s) { // considering G[s]
-            int_array& id = a, t = b, st = c; 
-            id.fill(-1);
-            get_sccs(scc, adj, id, t, st, s);
-            extract_scc_features(scc, id, adj, adj1, adj2, scc_feats, s);
-            int_array& reach = t;
-            get_reachability(scc, id, adj2, reach);
-            extract_vertex_features(scc, id, adj1, adj2, scc_feats, vertex_feats);
-            int k = scc.size();
-            for(int i = 0; i < k; ++i)
-                if(reach[i] == s)
-                    for(int u: scc[i])
-                        process_example(vertex_feats[u]);
-            // Resetting data structures
-            t.fill(0);
-            scc.clear();
-            for(int i = 0; i < N; ++i) {
-                adj1[i].clear();
-                adj2[i].clear();
+        fill_dp_grid(adj, dp);
+        for(int u = 0; u < N; ++u) {
+            for(int s = 0; s < POW2_N; ++s)
+                lp[s] = dp[u][s] ? __popcount(s) : 0;
+            // max over subset (zeta transform)
+            for(int i = 0; i < N; ++i)
+                for(int s = 0; s < POW2_N; ++s)
+                    if(s & (1 << i))
+                        lp[s] = max(lp[s], lp[s ^ (1 << i)]);
+            for(int s = 1; s < POW2_N; ++s) { // considering G[s]
+                if(!contains(s, u) || !reaches_all(u, adj, s)) continue;
+                id.fill(-1);
+                get_sccs(scc, adj, id, t, st, s);
+                extract_scc_features(scc, id, adj, adj1, adj2, scc_feats, s);
+                extract_vertex_features(scc, id, adj1, adj2, scc_feats, vertex_feats);
+                vertex_feats[u].longest_path = lp[s];
+                process_example(vertex_feats[u]);
+                // Resetting data structures
+                t.fill(0);
+                scc.clear();
+                for(int i = 0; i < N; ++i) {
+                    adj1[i].clear();
+                    adj2[i].clear();
+                }
             }
         }
         for(int i = 0; i < N; ++i) dp[i].reset();
