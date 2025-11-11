@@ -86,14 +86,14 @@ static bool read_next_graph_into_fixed_adj(istream &in, list_of_lists &adj, int 
 
 int main()
 {
-    ifstream fin("graphs_adjlist.txt");
+    ifstream fin("graphs_adjlist_sparse.txt");
     if (!fin)
     {
         cerr << "Brooo… couldn't open graphs.txt\n";
         return 1;
     }
 
-    std::ofstream csv("dataset.csv", std::ios::out | std::ios::trunc);
+    std::ofstream csv("dataset2.csv", std::ios::out | std::ios::trunc);
     if (!csv)
     {
         cerr << "DB said nope: can't open dataset.csv\n";

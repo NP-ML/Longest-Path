@@ -2,7 +2,7 @@
 # Generates random graphs (PureRandom & Mixed) with fixed n=30,
 # appends adjacency lists to a text file (crash-safe, resume capable).
 
-import json, os, random, argparse
+import os, random, argparse
 
 # ---------- generation ----------
 
@@ -50,14 +50,14 @@ def gen_mixed(n):
             # soft SCC
             for i in range(len(B)):
                 edges.add((B[i], B[(i + 1) % len(B)]))
-            p_in = 0.6 + 0.4 * random.random()
+            p_in = 0.2 + 0.4 * random.random()
             for i in range(len(B)):
                 for j in range(len(B)):
                     if i != j and random.random() < p_in:
                         edges.add((B[i], B[j]))
 
     if len(blocks) >= 2:
-        p_bridge = 0.10 + 0.20 * random.random()
+        p_bridge = 0.05 + 0.20 * random.random()
         for i in range(len(blocks)):
             for j in range(i + 1, len(blocks)):
                 for a in blocks[i]:
@@ -102,7 +102,7 @@ def append_adjlist(path, edges, idx, fsync_every):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", type=str, default="graphs_adjlist.txt")
+    ap.add_argument("--out", type=str, default="graphs_adjlist_sparse.txt")
     ap.add_argument("--count", type=int, default=100)
     ap.add_argument("--pure", type=int, default=10, help="target pure-random count within total")
     ap.add_argument("--seed", type=int, default=4242)
@@ -127,7 +127,7 @@ def main():
         random_state = random.getstate()
         random.seed(rnd.getrandbits(64))
         if kind == "PureRandom":
-            p = 0.15 + 0.20 * rnd.random()
+            p = 0.1 + 0.10 * rnd.random()
             edges = gen_pure_random(n, p)
         else:
             edges = gen_mixed(n)
