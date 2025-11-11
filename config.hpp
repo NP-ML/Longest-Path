@@ -16,7 +16,7 @@ struct int_array: public array<int, N> {
     int_array() {};
     void add(int x) { this->operator[](size++) = x; } 
     int top() { return this->operator[](size - 1); }
-    int pop() { return this->operator[](size); }
+    int pop() { return this->operator[](--size); }
 };
 
 #define contains(mask, b) (((mask) >> (b)) & 1)

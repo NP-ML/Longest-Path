@@ -1,4 +1,4 @@
-#include <config.hpp>
+#include "config.hpp"
 using namespace std;
 
 // Fills the `dp` grid where `dp[u][s]` is whether or not there's a path starting from `u` containing all vertices in `s`
