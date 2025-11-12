@@ -4,7 +4,9 @@ using namespace std;
 constexpr unsigned int N = 5; // Graph size
 constexpr unsigned int POW2_N = 1 << N;
 
-using int_map = array<int, POW2_N>;
+struct int_map : vector<int> {
+    int_map() : vector<int>(POW2_N) {}
+};
 using int_set = bitset<POW2_N>;
 using list_of_lists = array<vector<int>, N>;
 struct bool_grid : public vector<int_set> {
