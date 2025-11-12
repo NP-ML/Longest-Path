@@ -7,8 +7,7 @@ struct runner {
     list_of_lists adj;
     runner(string output_file) {
         out = ofstream(output_file, ios::app);
-        out << "scc_size,number_of_edges_inside_scc,number_of_edges_to_other_sccs,scc_largest_path_sum,scc_longest_dfs_path";
-        out << "outdegree_inside_scc,outdegree_outside_scc,indegree_inside_scc,longest_path_using_dfs_paths,first_dfs_path_used,longest_path\n";
+        out << "scc_size,number_of_edges_inside_scc,number_of_edges_to_other_sccs,scc_largest_path_sum,scc_longest_dfs_path,outdegree_inside_scc,outdegree_outside_scc,indegree_inside_scc,longest_path_using_dfs_paths,first_dfs_path_used,longest_path\n";
     }
     void _process_example(vertex_features& vertex_feats) {
         scc_features* scc_feats = vertex_feats.scc_feats;
