@@ -5,15 +5,14 @@ struct runner {
     ofstream out;
     graph_processor processor;
     list_of_lists adj;
-    runner(string output_file) {
-        out = ofstream(output_file, ios::app);
+    runner(string output_file) : out(output_file, ios::app) {
         out << "scc_size,number_of_edges_inside_scc,number_of_edges_to_other_sccs,scc_largest_path_sum,scc_longest_dfs_path,outdegree_inside_scc,outdegree_outside_scc,indegree_inside_scc,longest_path_using_dfs_paths,first_dfs_path_used,longest_path\n";
     }
     void _process_example(vertex_features& vertex_feats) {
         scc_features* scc_feats = vertex_feats.scc_feats;
         out << scc_feats->size << "," 
         << scc_feats-> number_of_edges_inside_scc << "," 
-        << scc_feats->number_of_edges_to_other_sccs << "." 
+        << scc_feats->number_of_edges_to_other_sccs << "," 
         << scc_feats->largest_path_sum << ","
         << scc_feats -> longest_dfs_path << ","
         << vertex_feats.outdegree_inside_scc << "," 
@@ -34,6 +33,7 @@ struct runner {
                 adj[u].push_back(v);
             }
             processor.process_graph(adj, _process_example);
+            for(int u = 0; u < N; ++u) adj[u].clear();
         }
     }
 };
