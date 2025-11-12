@@ -23,7 +23,7 @@ static void fill_dp_grid(
             }
 }
 
-// Fills the `id` array where `id[u]` is number of SCC containing `u` and returns `scc` where `scc[i]` is list of vertices in `i`th SCC
+// Fills the `id` array where `id[u]` is number of SCC containing `u`, and fills `scc` where `scc[i]` is list of vertices in `i`th SCC
 //
 // Requirements:
 //  `scc` is empty
