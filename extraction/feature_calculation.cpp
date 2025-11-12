@@ -112,7 +112,7 @@ struct graph_processor {
     // Takes an adjacency list and a function for processing an example
     void process_graph(
         list_of_lists& adj,
-        void (*process_example)(vertex_features&)
+        const function<void(vertex_features&)>& process_example
     ) {
         int s;
         fill_dp_grid(adj, dp);
