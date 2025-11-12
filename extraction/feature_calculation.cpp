@@ -122,7 +122,7 @@ struct graph_processor {
             // max over subset (zeta transform)
             for(int i = 0; i < N; ++i)
                 for(s = 0; s < POW2_N; ++s)
-                    if(s & (1 << i))
+                    if(contains(s, i))
                         lp[s] = max(lp[s], lp[s ^ (1 << i)]);
             for(s = 1; s < POW2_N; ++s) { // considering G[s]
                 if(!contains(s, u) || !reaches_all(u, adj, s)) continue;
