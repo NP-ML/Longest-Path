@@ -19,8 +19,8 @@ class Net(nn.Module):
         self.fc6 = nn.Linear(20, 1)  # Hidden layer to output layer
 
     def forward(self, x):
-        ub = x[:, 0:1]
-        lb = x[:, 1:2]
+        ub = x[:, 3:4]
+        lb = x[:, 8:9]
         features = x
         y = torch.sigmoid(self.fc1(features))
         y = torch.sigmoid(self.fc2(y))
