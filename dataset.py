@@ -1,6 +1,5 @@
-# make_fixed_graphs_txt.py
 # Generates random graphs (PureRandom & Mixed) with fixed n=30,
-# appends adjacency lists to a text file (crash-safe, resume capable).
+# appends adjacency lists to a text file 
 
 import os, random, argparse
 

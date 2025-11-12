@@ -1,8 +1,7 @@
 #include "algorithms.cpp"
 using namespace std;
 
-struct scc_features
-{
+struct scc_features {
     int size;
     int number_of_edges_inside_scc;
     int number_of_edges_to_other_sccs;
@@ -10,8 +9,7 @@ struct scc_features
     int longest_dfs_path;
 };
 
-struct vertex_features
-{
+struct vertex_features {
     int longest_path;
     int outdegree_inside_scc;
     int outdegree_outside_scc;
@@ -32,28 +30,23 @@ void extract_scc_features(
     list_of_lists &adj1,
     list_of_lists &adj2,
     array<scc_features, N> &scc_feats,
-    int s)
-{
+    int s
+) {
     int k = scc.size();
-    for (int i = 0; i < k; ++i)
-    {
+    for (int i = 0; i < k; ++i) {
         scc_features &this_scc_feats = scc_feats[i];
         this_scc_feats.size = scc[i].size();
         this_scc_feats.largest_path_sum = this_scc_feats.size;
         this_scc_feats.number_of_edges_inside_scc = this_scc_feats.number_of_edges_to_other_sccs = 0;
-        for (int u : scc[i])
-        {
-            for (int v : adj[u])
-            {
+        for (int u : scc[i]) {
+            for (int v : adj[u]) {
                 if (!contains(s, v))
                     continue;
-                if (id[u] == id[v])
-                {
+                if (id[u] == id[v]) {
                     adj1[u].push_back(v);
                     ++this_scc_feats.number_of_edges_inside_scc;
                 }
-                else
-                {
+                else {
                     adj2[u].push_back(v);
                     ++this_scc_feats.number_of_edges_to_other_sccs;
                     this_scc_feats.largest_path_sum = max(
@@ -72,16 +65,14 @@ void extract_vertex_features(
     list_of_lists &adj1,
     list_of_lists &adj2,
     array<scc_features, N> &scc_feats,
-    array<vertex_features, N> &vertex_feats)
-{
+    array<vertex_features, N> &vertex_feats
+) {
     int k = scc.size();
-    for (int i = 0; i < k; ++i)
-    {
+    for (int i = 0; i < k; ++i) {
         list_of_lists revAdj;
         scc_features &this_scc_feats = scc_feats[i];
         this_scc_feats.longest_dfs_path = 1;
-        for (int u : scc[i])
-        {
+        for (int u : scc[i]) {
             vertex_features &this_vertex_feats = vertex_feats[u];
             this_vertex_feats.outdegree_inside_scc = adj1[u].size();
             this_vertex_feats.outdegree_outside_scc = adj2[u].size();
@@ -90,14 +81,12 @@ void extract_vertex_features(
             for (int v : adj1[u])
                 revAdj[v].push_back(u);
         }
-        for (int u : scc[i])
-        {
+        for (int u : scc[i]) {
             vertex_feats[u].indegree_inside_scc = revAdj[u].size();
             int s = 0, remaining = 0;
             for (int v : adj2[u])
                 remaining = max(remaining, vertex_feats[v].longest_path_using_dfs_paths);
-            auto dfs = [&](int u_, int len, auto &&self) -> void
-            {
+            auto dfs = [&](int u_, int len, auto &&self) -> void {
                 toggle(s, u_);
                 vertex_features &this_vertex_feats = vertex_feats[u_];
                 this_scc_feats.longest_dfs_path = max(this_scc_feats.longest_dfs_path, len);
@@ -115,8 +104,7 @@ void extract_vertex_features(
     }
 }
 
-struct graph_processor
-{
+struct graph_processor {
     bool_grid dp;
     int_map lp;
     list_of_lists adj1, adj2;
@@ -127,12 +115,11 @@ struct graph_processor
     // Takes an adjacency list and a function for processing an example
     void process_graph(
         list_of_lists &adj,
-        function<void(vertex_features &)> &process_example)
-    {
+        function<void(vertex_features &)> &process_example
+    ) {
         int s;
         fill_dp_grid(adj, dp);
-        for (int u = 0; u < N; ++u)
-        {
+        for (int u = 0; u < N; ++u) {
             for (s = 0; s < POW2_N; ++s)
                 lp[s] = dp[u][s] ? __popcount(s) : 0;
             // max over subset (zeta transform)
@@ -140,8 +127,7 @@ struct graph_processor
                 for (s = 0; s < POW2_N; ++s)
                     if (contains(s, i))
                         lp[s] = max(lp[s], lp[s ^ (1 << i)]);
-            for (s = 1; s < POW2_N; ++s)
-            { // considering G[s]
+            for (s = 1; s < POW2_N; ++s) { // considering G[s]
                 if (!contains(s, u) || !reaches_all(u, adj, s))
                     continue;
                 t.fill(0);

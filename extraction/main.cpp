@@ -10,12 +10,10 @@ struct runner
     graph_processor processor;
     list_of_lists adj;
 
-    runner(string output_file) : out(output_file, ios::app)
-    {
+    runner(string output_file) : out(output_file, ios::app) {
         out << "scc_size,number_of_edges_inside_scc,number_of_edges_to_other_sccs,scc_largest_path_sum,scc_longest_dfs_path,outdegree_inside_scc,outdegree_outside_scc,indegree_inside_scc,longest_path_using_dfs_paths,first_dfs_path_used,longest_path\n";
     }
-    void _process_example(vertex_features &vertex_feats)
-    {
+    void _process_example(vertex_features &vertex_feats) {
         scc_features *scc_feats = vertex_feats.scc_feats;
         if(vertex_feats.longest_path_using_dfs_paths == scc_feats->largest_path_sum) return;
         out << scc_feats->size << ","
@@ -31,22 +29,17 @@ struct runner
             << vertex_feats.longest_path << "\n";
     }
 
-    void process_graph(string input_file)
-    {
+    void process_graph(string input_file) {
         ifstream in(input_file);
         int t, u, v, m;
         in >> t;
-        while (t--)
-        {
+        while (t--) {
             in >> m;
-            while (m--)
-            {
+            while (m--) {
                 in >> u >> v;
                 adj[u].push_back(v);
             }
-            std::function<void(vertex_features &)> cb =
-                [this](vertex_features &vf)
-            { _process_example(vf); };
+            function<void(vertex_features &)> cb = [this](vertex_features &vf) { _process_example(vf); };
             processor.process_graph(adj, cb);
             for (int u = 0; u < N; ++u)
                 adj[u].clear();
@@ -54,9 +47,7 @@ struct runner
     }
 };
 
-int main()
-{
-
+int main() {
     runner r("dataset1.csv");
     r.process_graph("graph1.txt");
     return 0;
