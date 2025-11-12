@@ -144,6 +144,7 @@ struct graph_processor
             { // considering G[s]
                 if (!contains(s, u) || !reaches_all(u, adj, s))
                     continue;
+                t.fill(0);
                 id.fill(-1);
                 get_sccs(scc, adj, id, t, st, s);
                 extract_scc_features(scc, id, adj, adj1, adj2, scc_feats, s);
@@ -151,7 +152,6 @@ struct graph_processor
                 vertex_feats[u].longest_path = lp[s];
                 process_example(vertex_feats[u]);
                 // Resetting data structures
-                t.fill(0);
                 scc.clear();
                 for (int i = 0; i < N; ++i)
                 {

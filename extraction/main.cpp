@@ -17,17 +17,7 @@ struct runner
     void _process_example(vertex_features &vertex_feats)
     {
         scc_features *scc_feats = vertex_feats.scc_feats;
-        if (!scc_feats)
-        {                       // ← added guard
-            out << "0,0,0,0,0," // scc_* fields defaulted
-                << vertex_feats.outdegree_inside_scc << ","
-                << vertex_feats.outdegree_outside_scc << ","
-                << vertex_feats.indegree_inside_scc << ","
-                << vertex_feats.longest_path_using_dfs_paths << ","
-                << vertex_feats.first_dfs_path_used << ","
-                << vertex_feats.longest_path << "\n";
-            return;
-        }
+        if(vertex_feats.longest_path_using_dfs_paths == scc_feats->largest_path_sum) return;
         out << scc_feats->size << ","
             << scc_feats->number_of_edges_inside_scc << ","
             << scc_feats->number_of_edges_to_other_sccs << ","
@@ -68,7 +58,6 @@ int main()
 {
 
     runner r("dataset1.csv");
-    cout << "hi";
     r.process_graph("graph1.txt");
     return 0;
 }
