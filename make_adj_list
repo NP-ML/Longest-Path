@@ -1,0 +1,11 @@
+def process_graph(input_file, N):
+    with open(input_file, 'r') as in_file:
+        t = int(in_file.readline().strip())
+        for _ in range(t):
+            m = int(in_file.readline().strip())
+            adj = [[] for _ in range(N)]  # Pre-allocated list of lists
+            
+            for _ in range(m):
+                u, v = map(int, in_file.readline().split())
+                adj[u].append(v)        
+        return adj
