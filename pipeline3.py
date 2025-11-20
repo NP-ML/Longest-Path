@@ -54,8 +54,9 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
                     if idx == j:
                         Paths[k] = (idx, new_score)
                         break
-                else:
-                    Paths.append((j, new_score))
-
+                    else: #weird seems unnecaessary
+                        print("entered weird if")
+                        Paths.append((j, new_score))
+    
     return Paths
 
