@@ -36,6 +36,10 @@ with open(path, "rb") as f:
 
 
 adj=make_adj_list.process_graph(r"C:\Users\User\Longest-Path-2\graphs_adjlist_sparse.txt", 30)[3]
-print(adj)
+#save time here
 print(pipeline3.top_K_nodes(adj,model,feature_extraction.extract_features,undirected=False,neighbors_only_update=True))
+#save time here 
+#inference time = time2-time1 
+#print inference time 
+
 
