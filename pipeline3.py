@@ -15,20 +15,24 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
 
     graph = copy.deepcopy(adj)
     n = len(graph)
-    Paths = []
-
+    Scores = []
+    Path_estimated = []
     # initial features & scores for ALL nodes
     features_all = extract_features_fn(graph)                          # Nx10
     feats_t = torch.as_tensor(features_all, dtype=torch.float32, device=device)
     with torch.no_grad():
         for i in range(n):
             score = model(feats_t[i:i+1]).squeeze().item()             # ⬅️ model
-            Paths.append((i, score))
+            Scores.append((i, score))
     
     for _ in range(n):
-        Paths.sort(key=lambda x: x[1], reverse=True)
-
-        chosen_node = Paths[0][0]
+        Scores.sort(key=lambda x: x[1], reverse=True)
+        print(Scores,_)
+        if len(Scores) == 0:
+            break
+        
+        chosen_node = Scores[0][0]
+        Path_estimated.append(chosen_node)
 
         # neighbors of chosen_node (save before zeroing)
         neighbors_list = list(graph[chosen_node])
@@ -39,24 +43,29 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
                 graph[i] = []                                          # keep indices stable
             if chosen_node in graph[i]:
                 graph[i].remove(chosen_node)
-
+        print(neighbors_list,graph)
+        if neighbors_list == []:
+            break 
         # neighbors-only re-score
         features_new = extract_features_fn(graph)
         feats_t = torch.as_tensor(features_new, dtype=torch.float32, device=device)
 
         # drop chosen node from candidates
-        Paths = [(idx, sc) for (idx, sc) in Paths if idx != chosen_node and (idx in neighbors_list)]
-
+        for i in range(n):
+            score = model(feats_t[i:i+1]).squeeze().item()             # ⬅️ model
+            Scores.append((i, score))
+        Scores = [(idx, sc) for (idx, sc) in Scores if idx != chosen_node and (idx in neighbors_list)]
+        print(Scores,52)
         with torch.no_grad():
             for j in neighbors_list:
                 new_score = model(feats_t[j:j+1]).squeeze().item()     # ⬅️ model
-                for k, (idx, _) in enumerate(Paths):
+                for k, (idx, _) in enumerate(Scores):
                     if idx == j:
-                        Paths[k] = (idx, new_score)
+                        Scores[k] = (idx, new_score)
                         break
                     else: #weird seems unnecaessary
                         print("entered weird if")
-                        Paths.append((j, new_score))
+                        Scores.append((j, new_score))
     
-    return Paths
+    return  Path_estimated
 
