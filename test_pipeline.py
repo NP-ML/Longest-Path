@@ -28,14 +28,14 @@ class Net(nn.Module):
         y = torch.sigmoid(self.fc5(y))
         y = torch.sigmoid(self.fc6(y))
         return y * (ub - lb) + lb 
-path = r"C:\Users\User\Longest-Path-2\trained_model.pkl"
+path ="trained_model.pkl"
 
 with open(path, "rb") as f:
     model = pickle.load(f)   # <-- NOT torch.load
 
 
 
-adj=make_adj_list.process_graph(r"C:\Users\User\Longest-Path-2\graphs_adjlist_sparse.txt", 30)[3]
+adj=make_adj_list.process_graph("graphs_adjlist_sparse.txt", 30)[3]
 #save time here
 print(pipeline3.top_K_nodes(adj,model,feature_extraction.extract_features,undirected=False,neighbors_only_update=True))
 #save time here 
