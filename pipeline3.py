@@ -27,7 +27,6 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
     
     for _ in range(n):
         Scores.sort(key=lambda x: x[1], reverse=True)
-        print(Scores,_)
         if len(Scores) == 0:
             break
         
@@ -43,7 +42,6 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
                 graph[i] = []                                          # keep indices stable
             if chosen_node in graph[i]:
                 graph[i].remove(chosen_node)
-        print(neighbors_list,graph)
         if neighbors_list == []:
             break 
         # neighbors-only re-score
@@ -55,7 +53,6 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
             score = model(feats_t[i:i+1]).squeeze().item()             # ⬅️ model
             Scores.append((i, score))
         Scores = [(idx, sc) for (idx, sc) in Scores if idx != chosen_node and (idx in neighbors_list)]
-        print(Scores,52)
         with torch.no_grad():
             for j in neighbors_list:
                 new_score = model(feats_t[j:j+1]).squeeze().item()     # ⬅️ model
@@ -63,8 +60,7 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
                     if idx == j:
                         Scores[k] = (idx, new_score)
                         break
-                    else: #weird seems unnecaessary
-                        print("entered weird if")
+                    else:
                         Scores.append((j, new_score))
     
     return  Path_estimated
