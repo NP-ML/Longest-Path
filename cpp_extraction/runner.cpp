@@ -48,7 +48,7 @@ struct runner
 };
 
 int main() {
-    runner r("dataset1.csv");
-    r.process_graph("graph1.txt");
+    runner r("dataset.csv");
+    r.process_graph("graphs.txt");
     return 0;
 }

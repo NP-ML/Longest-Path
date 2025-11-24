@@ -1,7 +1,8 @@
-
 import torch 
 import copy
-def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_only_update=True, k=0 ):
+from py_extraction.feature_extraction import *
+
+def path_from_kth_best_start(adj, model, k = 0):
     """
     1) extract_features(graph)
     2) score all nodes with model, pick argmax
@@ -18,7 +19,7 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
     Scores = []
     Path_estimated = []
     # initial features & scores for ALL nodes
-    features_all = extract_features_fn(graph)                          # Nx10
+    features_all = extract_features(graph)                          # Nx10
     feats_t = torch.as_tensor(features_all, dtype=torch.float32, device=device)
     with torch.no_grad():
         for i in range(n):
@@ -47,7 +48,7 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
         if neighbors_list == []:
             break 
         # neighbors-only re-score
-        features_new = extract_features_fn(graph)
+        features_new = extract_features(graph)
         feats_t = torch.as_tensor(features_new, dtype=torch.float32, device=device)
 
         # drop chosen node from candidates
@@ -66,4 +67,3 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
                         Scores.append((j, new_score))
     
     return  Path_estimated
-

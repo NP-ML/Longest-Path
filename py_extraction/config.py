@@ -1,4 +1,4 @@
-N = 25
+N = 20
 POW2_N = 1 << N
 
 def contains(mask, b): return (mask >> b) & 1 == 1

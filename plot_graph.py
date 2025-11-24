@@ -1,6 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import make_adj_list
+
 def plot_graph_from_adj(adj, directed=True):
     # adj: list of lists
     # node i has edges to all nodes in adj[i]
@@ -31,10 +31,3 @@ def plot_graph_from_adj(adj, directed=True):
     plt.title("Graph")
     plt.tight_layout()
     plt.show()
-
-
-if __name__ == "__main__":
-    # tiny example
-    adj = make_adj_list.process_graph(r"C:\Users\User\Longest-Path-2\graphs_adjlist_sparse.txt", 30)
-
-    plot_graph_from_adj(adj, directed=True)

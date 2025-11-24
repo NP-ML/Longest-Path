@@ -1,4 +1,4 @@
-def process_graph(input_file, N,i=0):
+def process_graph(input_file, N):
     #i is index in the txt file
     with open(input_file, 'r') as in_file:
         all_graphs = []

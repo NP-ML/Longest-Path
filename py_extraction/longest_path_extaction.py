@@ -1,14 +1,23 @@
 from config import *
+from bitarray import bitarray
 
-dp = [[False] * POW2_N for _ in range(N)]
+dp = [bitarray(POW2_N) for _ in range(N)]
+for b in dp:
+    b.setall(False)
+
 
 def extract_longest_path(adj):
     n = len(adj)
     pow2_n = 1 << n
-    for u in range(n): dp[u][1 << u] = True
+
+    # Initialize dp[u][1 << u] = True
+    for u in range(n):
+        dp[u][1 << u] = True
+
     bestStart = 0
     bestMask = 1
     bestSize = 1
+
     for mask in range(pow2_n):
         for u in range(n):
             if contains(mask, u) and not isPowOf2(mask):
@@ -22,16 +31,19 @@ def extract_longest_path(adj):
                             bestMask = mask
                             bestSize = size
                         break
+
+    # Recover path
     path = []
     for _ in range(bestSize):
         path.append(bestStart)
         bestMask ^= 1 << bestStart
-        for next in adj[bestStart]:
-            if dp[next][bestMask]:
-                bestStart = next
+        for nxt in adj[bestStart]:
+            if dp[nxt][bestMask]:
+                bestStart = nxt
                 break
-    # resetting dp
-    for mask in range(pow2_n):
-        for u in range(n):
-            dp[u][mask] = False
+
+    # Reset dp to all False
+    for b in dp:
+        b.setall(False)
+
     return path
