@@ -8,7 +8,7 @@ struct int_map : vector<int> {
     int_map() : vector<int>(POW2_N) {}
 };
 class int_set {
-    vector<uint64_t> data = vector<uint64_t>(1 << (N - 6), 0);
+    vector<uint64_t> data = vector<uint64_t>(POW2_N >> 6, 0);
 public:
     int_set() {}
     class ref {
