@@ -58,7 +58,7 @@ struct longest_path_solver
 };
 
 int main() {
-    longest_path_solver lps("dataset.csv");
+    longest_path_solver lps("longest_paths.txt");
     lps.process_graphs("graphs.txt");
     return 0;
 }
