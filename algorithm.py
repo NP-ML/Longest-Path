@@ -1,6 +1,6 @@
 import torch 
 import copy
-from ..py_extraction.feature_extraction import *
+from py_extraction.feature_extraction import *
 
 def path_from_kth_best_start(adj, model, k = 0):
     """
