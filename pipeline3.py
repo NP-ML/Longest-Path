@@ -1,7 +1,7 @@
 
 import torch 
 import copy
-def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_only_update=True):
+def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_only_update=True, k=0 ):
     """
     1) extract_features(graph)
     2) score all nodes with model, pick argmax
@@ -27,10 +27,12 @@ def top_K_nodes(adj, model, extract_features_fn, undirected=False, neighbors_onl
     
     for _ in range(n):
         Scores.sort(key=lambda x: x[1], reverse=True)
+        #print(Scores,_) you can remove the comment 
         if len(Scores) == 0:
             break
-        
-        chosen_node = Scores[0][0]
+        if _>=1: #pick the k start only for first element, for the rest pick the first only 
+            k=0
+        chosen_node = Scores[k][0]
         Path_estimated.append(chosen_node)
 
         # neighbors of chosen_node (save before zeroing)
