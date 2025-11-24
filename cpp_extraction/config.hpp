@@ -7,7 +7,26 @@ constexpr unsigned int POW2_N = 1 << N;
 struct int_map : vector<int> {
     int_map() : vector<int>(POW2_N) {}
 };
-using int_set = bitset<POW2_N>;
+class int_set {
+    vector<uint64_t> data = vector<uint64_t>(1 << (N - 6), 0);
+public:
+    int_set() {}
+    class ref {
+        uint64_t &block;
+        uint64_t mask;
+    public:
+        ref(uint64_t &b, uint64_t m) : block(b), mask(m) {}
+        ref& operator=(bool v) {
+            if (v) block |= mask;
+            else block &= ~mask;
+            return *this;
+        }
+        operator bool() const { return (block & mask) != 0; }
+    };
+    ref operator[](size_t i) { return ref(data[i >> 6], 1ULL << (i & 63)); }
+    bool operator[](size_t i) const { return (data[i >> 6] >> (i & 63)) & 1ULL; }
+    void reset() { fill(data.begin(), data.end(), 0ULL); }
+};
 using list_of_lists = array<vector<int>, N>;
 struct bool_grid : public vector<int_set> {
     bool_grid() : vector<int_set>(N) {}
