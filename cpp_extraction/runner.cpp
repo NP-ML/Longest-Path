@@ -30,7 +30,7 @@ struct runner
         };
     }
 
-    void process_graph(string input_file) {
+    void process_graphs(string input_file) {
         ifstream in(input_file);
         int t, u, v, m;
         in >> t;
@@ -49,6 +49,6 @@ struct runner
 
 int main() {
     runner r("dataset.csv");
-    r.process_graph("graphs.txt");
+    r.process_graphs("graphs.txt");
     return 0;
 }

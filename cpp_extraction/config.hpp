@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-constexpr unsigned int N = 5; // Graph size
+constexpr unsigned int N = 30; // Graph size
 constexpr unsigned int POW2_N = 1 << N;
 
 struct int_map : vector<int> {
