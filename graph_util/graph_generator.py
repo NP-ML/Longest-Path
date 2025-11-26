@@ -14,7 +14,7 @@ def gen_pure_random(n, p):
     return sorted(edges)
 
 def gen_mixed(n):
-    p_out = 0.15 + 0.20 * random.random()   # was 0.05–0.20 → now 0.25–0.60
+    p_out = 0.4 + 0.20 * random.random()   # was 0.05–0.20 → now 0.25–0.60
     p_in = 0.3 + 0.1 * random.random()      # was 0.6–1.0 (slightly higher average)
     p_bridge = 0.15 + 0.25 * random.random()  # was 0.10–0.30 → now 0.25–0.60
 
@@ -101,10 +101,10 @@ def append_adjlist(path, edges, idx, fsync_every):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", type=str, default="graphs_adjlist_sparse.txt")
+    ap.add_argument("--out", type=str, default="graphs.txt")
     ap.add_argument("--count", type=int, default=100)
-    ap.add_argument("--pure", type=int, default=10, help="target pure-random count within total")
-    ap.add_argument("--seed", type=int, default=4242)
+    ap.add_argument("--pure", type=int, default=100, help="target pure-random count within total")
+    ap.add_argument("--seed", type=int, default=4243)
     ap.add_argument("--fsync-every", type=int, default=50)
     args = ap.parse_args()
 
@@ -126,7 +126,7 @@ def main():
         random_state = random.getstate()
         random.seed(rnd.getrandbits(64))
         if kind == "PureRandom":
-            p = 0.1 + 0.10 * rnd.random()
+            p = 0.07
             edges = gen_pure_random(n, p)
         else:
             edges = gen_mixed(n)

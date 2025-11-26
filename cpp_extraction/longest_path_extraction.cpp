@@ -16,6 +16,7 @@ struct longest_path_solver
         ifstream in(input_file);
         int t, u, v, m;
         in >> t;
+        out << t << endl;
         while (t--) {
             in >> m;
             while (m--) {
@@ -46,9 +47,10 @@ struct longest_path_solver
                     }
                 }
             }
-            out << bestSize << "\n";
+            out << bestSize << endl;
             for(int u: path) out << u << " ";
-            out << "\n";
+            out << endl;
+            cout << "Processed graph, longest path size: " << bestSize << "\n";
             for (int u = 0; u < N; ++u) {
                 adj[u].clear();
                 dp[u].reset();
@@ -59,6 +61,7 @@ struct longest_path_solver
 
 int main() {
     longest_path_solver lps("longest_paths.txt");
+    cout << "Starting processing graphs...\n";
     lps.process_graphs("graphs.txt");
     return 0;
 }
