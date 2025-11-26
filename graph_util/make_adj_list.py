@@ -1,19 +1,19 @@
-def process_graph(input_file, N):
-    #i is index in the txt file
-    with open(input_file, 'r') as in_file:
-        all_graphs = []
-        t = int(in_file.readline().strip())
+def process_graphs(input_file, n):
+    all_graphs = []
+    with open(input_file, 'r') as f:
+        t = int(f.readline().strip())
 
-        for _ in range(t):
-            m= in_file.readline().strip()
-            if m == '' :
-                all_graphs.append(adj)
-                m= in_file.readline().strip()
-                # process one example for now, should fix later
-            m = int(m)
-            adj = [[] for _ in range(N)]  # Pre-allocated list of lists
-            
-            for _ in range(m):
-                u, v = map(int, in_file.readline().split())
-                adj[u].append(v)        
+        for i in range(t):
+            line = f.readline().strip()
+            if line == '':
+                line = f.readline().strip()
+            m = int(line)
+            adj = [[] for _ in range(n)]
+
+            for j in range(m):
+                u, v = map(int, f.readline().split())
+                adj[u].append(v)
+
+            all_graphs.append(adj)
+
     return all_graphs
