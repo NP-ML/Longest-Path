@@ -8,6 +8,7 @@
 from top_k_paths import find_top_k_paths
 from graph_util.make_adj_list import process_graphs
 import model.net as net
+#from bench_marking import heuristic
 import os
 import sys
 import pickle
