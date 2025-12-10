@@ -21,4 +21,4 @@ Contents (selected)
   - [computed_paths/approximate_paths.txt](computed_paths/approximate_paths.txt)
 - Utilities:
   - [`graph_util/graph_generator.py`](graph_util/graph_generator.py) — random graph generator (see [`parse_existing`](graph_util/graph_generator.py))
-  - `evaluate.py` — quick stats script over approximate-vs-greedy comparison ([evaluate.py](evaluate.py))
+  - `evaluate.py` — quick stats script over approximate-vs-brute force comparison ([evaluate.py](evaluate.py))
