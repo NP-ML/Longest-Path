@@ -1,63 +1,24 @@
+# Longest Path Graph Benchmark
 
+This repository implements tools to generate, analyze and (approximately) solve the Longest Simple Path problem on small graphs. It combines a C++ DP core, Python feature extraction / heuristics, and simple learned predictors.
 
-Longest Path Graph Benchmark
-
-This project combines C++ and Python to analyze graph structure features and build a baseline model that predicts the Longest Simple Path (LSP) length in random directed and undirected graphs.
-
-Repository Structure
-
-* config.hpp : C++ type definitions and constants
-* util.cpp : Bitmask dynamic programming for subset reachability (core for longest path)
-* initial_dataset.jsonl : Example dataset of graphs and expected longest path
-* initial_model_training.ipynb : Notebook for feature extraction, visualization, and baseline model
-* README.md : Documentation
-
-Overview
-
-Implemented Components:
-
-* Dataset handling: JSONL format (one graph per line) with Python stream loaders.
-* Feature extraction: Builds NetworkX graphs and computes structural descriptors such as number of nodes, edges, density, SCC statistics, degree statistics, clustering coefficient, and DAG flag.
-* Visualization: Generates sample graph figures with the reference longest path highlighted.
-* Baseline model: Random forest regression that predicts the longest path length or its normalized ratio using extracted features.
-* C++ core: Bitset-based dynamic programming routine that checks reachability for longest paths in small graphs (defined in util.cpp and config.hpp).
-
-Quickstart
-
-To run in Google Colab:
-
-1. Upload the file initial_dataset.jsonl.
-2. Open the notebook initial_model_training.ipynb.
-3. Run all cells to generate feature tables and plots. The outputs are written to the folders results/ and figures/.
-
-To run locally:
-
-1. Clone the repository and open a terminal in its directory.
-2. Install dependencies:
-   pip install pandas numpy networkx matplotlib scikit-learn orjson tqdm
-3. Open and run initial_model_training.ipynb using Jupyter Notebook.
-
-To compile the C++ core (optional):
-
-1. Use any C++17 compatible compiler:
-   g++ -O2 -std=c++17 util.cpp -o util
-   ./util
-2. You can edit constants in config.hpp to change the graph size N.
-
-Output
-The notebook automatically creates:
-
-* results/ : contains CSV summaries and saved model files.
-* figures/ : contains histograms, scatter plots, and example graph visualizations.
-
-Planned Extensions
-(Not yet implemented)
-
-* Neural or GNN-based predictors for longest path length.
-* Learned heuristic solvers guided by the regression model.
-* Automated dataset generation for larger graphs.
-
-
-Keywords
-graphs, longest path, subset DP, graph features, random forest, networkx, data analysis
-
+Contents (selected)
+- C++ core and helpers:
+  - [`cpp_extraction/config.hpp`](cpp_extraction/config.hpp)
+  - [`cpp_extraction/algorithms.cpp`](cpp_extraction/algorithms.cpp) — contains functions such as [`fill_dp_grid`](cpp_extraction/algorithms.cpp) and [`get_sccs`](cpp_extraction/algorithms.cpp)
+  - runner / extraction utilities in `cpp_extraction/`
+- Python code:
+  - [`algorithm.py`](algorithm.py) — heuristic / greedy routines (e.g. [`path_from_kth_best_start`](algorithm.py))
+  - [`top_k_paths.py`](top_k_paths.py) — top-k approximate path search ([`find_top_k_paths`](top_k_paths.py))
+  - [`evaluate.py`](evaluate.py) — path-file loader and evaluation; see [`load_paths`](evaluate.py)
+  - [`model/net.py`](model/net.py) — small PyTorch regressor model class [`Net`](model/net.py)
+  - [`Generalisation/testing_on_generated_dataset.py`](Generalisation/testing_on_generated_dataset.py) — runs comparisons between model and greedy (contains [`run_model_pipeline`](Generalisation/testing_on_generated_dataset.py) and [`run_greedy_pipeline`](Generalisation/testing_on_generated_dataset.py))
+  - misc scripts and notebooks in `model/` and `initial_method_scratched/`
+- Datasets & computed results:
+  - [datasets/graphs.txt](datasets/graphs.txt)
+  - [computed_paths/graphs.txt](computed_paths/graphs.txt)
+  - [computed_paths/longest_paths.txt](computed_paths/longest_paths.txt)
+  - [computed_paths/approximate_paths.txt](computed_paths/approximate_paths.txt)
+- Utilities:
+  - [`graph_util/graph_generator.py`](graph_util/graph_generator.py) — random graph generator (see [`parse_existing`](graph_util/graph_generator.py))
+  - `evaluate.py` — quick stats script over approximate-vs-greedy comparison ([evaluate.py](evaluate.py))
